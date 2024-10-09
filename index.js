@@ -8,7 +8,7 @@
     var year = currentTime.getFullYear();
     var returnDate = (day + "/" + month + "/" + year)
 
-    document.getElementsByClassName("dates")[2].innerHTML = "hi kishan";
+    document.querySelector('#dates').innerHTML = currentTime;
     // }
 // getCurrntTime();
 
