@@ -116,10 +116,10 @@
     <div class="chat-container">
         <div class="header">
             <div class="header-left">
-                <i class="fas fa-cog" title="Settings" onclick="toggleHistory()"></i>
+                <i class="fas fa-cog" title="Settings" onclick="toggleHistory()">History</i>
             </div>
             <span>Chat Interface</span>
-            <i class="fas fa-user-circle" title="Account" onclick="toggleAccountMenu()"></i>
+            <i class="fas fa-user-circle" title="Account" onclick="toggleAccountMenu()">Setting</i>
             <div class="account-menu" id="accountMenu">
                 <p>Profile</p>
                 <p>Settings</p>
@@ -133,7 +133,7 @@
         <div class="chat-box" id="chatBox"></div>
         <div class="input-box">
             <label for="fileInput">
-                <i class="fas fa-plus upload-icon"></i>
+                <i class="fas fa-plus upload-icon">+</i>
             </label>
             <input type="file" id="fileInput" onchange="analyzeFile(event)">
             <input type="text" id="userInput" placeholder="Type a message...">
