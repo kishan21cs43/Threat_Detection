@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT-Like Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            background-color: #f4f4f4;
+        }
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            position: relative;
+        }
+        .header-left i {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+        .account-menu {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 10px;
+            background: white;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-box {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+        }
+        .input-box {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #fff;
+        }
+        .upload-icon {
+            font-size: 20px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            margin-left: 5px;
+            padding: 8px 15px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .history-panel {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            width: 250px;
+            height: auto;
+            background: #222;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .delete-btn {
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        #fileInput {
+            display: none;
+        }
+    </style>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">
+            <div class="header-left">
+                <i class="fas fa-cog" title="Settings" onclick="toggleHistory()"></i>
+            </div>
+            <span>Chat Interface</span>
+            <i class="fas fa-user-circle" title="Account" onclick="toggleAccountMenu()"></i>
+            <div class="account-menu" id="accountMenu">
+                <p>Profile</p>
+                <p>Settings</p>
+                <p>Logout</p>
+            </div>
+        </div>
+        <div class="history-panel" id="historyPanel">
+            <h3>Chat History</h3>
+            <ul id="historyList"></ul>
+        </div>
+        <div class="chat-box" id="chatBox"></div>
+        <div class="input-box">
+            <label for="fileInput">
+                <i class="fas fa-plus upload-icon"></i>
+            </label>
+            <input type="file" id="fileInput" onchange="analyzeFile(event)">
+            <input type="text" id="userInput" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    
+    <script>
+        function toggleHistory() {
+            let historyPanel = document.getElementById("historyPanel");
+            historyPanel.style.display = historyPanel.style.display === "block" ? "none" : "block";
+        }
+        
+        function toggleAccountMenu() {
+            let accountMenu = document.getElementById("accountMenu");
+            accountMenu.style.display = accountMenu.style.display === "block" ? "none" : "block";
+        }
+        
+        function loadHistory() {
+            let storedHistory = localStorage.getItem("chatHistory");
+            return storedHistory ? JSON.parse(storedHistory) : [];
+        }
+
+        function saveHistory() {
+            localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
+        }
+
+        let chatHistory = loadHistory();
+        updateHistory();
+
+        function sendMessage() {
+            let input = document.getElementById("userInput");
+            let message = input.value.trim();
+            if (message !== "") {
+                chatHistory.push(message);
+                saveHistory();
+                updateHistory();
+                displayMessage(message);
+                input.value = "";
+            }
+        }
+
+        function displayMessage(message) {
+            let chatBox = document.getElementById("chatBox");
+            let messageElement = document.createElement("div");
+            messageElement.textContent = message;
+            chatBox.appendChild(messageElement);
+        }
+
+        function deleteHistoryItem(index) {
+            chatHistory.splice(index, 1);
+            saveHistory();
+            updateHistory();
+        }
+
+        function updateHistory() {
+            let historyList = document.getElementById("historyList");
+            historyList.innerHTML = "";
+            chatHistory.forEach((msg, index) => {
+                let listItem = document.createElement("li");
+                listItem.classList.add("history-item");
+                listItem.innerHTML = `<span>Chat ${index + 1}: ${msg}</span> <button class="delete-btn" onclick="deleteHistoryItem(${index})">Delete</button>`;
+                historyList.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+</html>
